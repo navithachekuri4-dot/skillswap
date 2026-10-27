@@ -1,0 +1,52 @@
+# Environment files - NEVER commit these
+.env
+.env.local
+.env.production
+.env.development
+backend/.env
+backend/.env.local
+backend/.env.production
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+
+# Allow example/template env files (contain no real secrets)
+!.env.example
+!backend/.env.example
+!frontend/.env.example
+
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Build output
+dist/
+dist-ssr/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test files
+backend/test_*.js
+backend/seed_navitha.js
+
