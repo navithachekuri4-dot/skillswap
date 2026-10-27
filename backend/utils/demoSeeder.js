@@ -4,29 +4,128 @@ const SkillRequest = require('../models/SkillRequest');
 const Proposal = require('../models/Proposal');
 const Session = require('../models/Session');
 const Review = require('../models/Review');
+const bcrypt = require('bcryptjs');
 
 const DEMO_EMAIL = process.env.DEMO_USER_EMAIL || 'demo.navitha@skillswap.edu';
 
+// Minimal peer profiles needed for Navitha's demo data.
+// These are created/updated on every demo login so the seeder
+// is fully self-contained and works even when seed.js was never run.
+const PEER_PROFILES = [
+  {
+    email: 'priya@demo.com',
+    name: 'Priya Sharma',
+    college: 'IIT Bombay',
+    year: '3rd Year',
+    bio: 'CS student passionate about modern web tech, React, and Python.',
+    skillsOffered: [
+      { name: 'React.js', category: 'Programming', level: 'Advanced', description: 'Modern React with hooks and state management.' },
+      { name: 'Python', category: 'Programming', level: 'Expert', description: 'Scripting, automation, and backend development.' }
+    ],
+    skillsNeeded: [
+      { name: 'Graphic Design', category: 'Design', level: 'Beginner' }
+    ],
+    availability: { weekdays: true, weekends: false, mornings: false, afternoons: true, evenings: true }
+  },
+  {
+    email: 'arjun@demo.com',
+    name: 'Arjun Mehta',
+    college: 'BITS Pilani',
+    year: '2nd Year',
+    bio: 'UI/UX enthusiast and digital product designer.',
+    skillsOffered: [
+      { name: 'Figma Design', category: 'Design', level: 'Advanced', description: 'End-to-end Figma workflows and interactive prototyping.' }
+    ],
+    skillsNeeded: [
+      { name: 'JavaScript', category: 'Programming', level: 'Beginner' }
+    ],
+    availability: { weekdays: false, weekends: true, mornings: true, afternoons: true, evenings: false }
+  },
+  {
+    email: 'sneha@demo.com',
+    name: 'Sneha Reddy',
+    college: 'NIT Hyderabad',
+    year: '4th Year',
+    bio: 'Competitive programmer and DSA mentor.',
+    skillsOffered: [
+      { name: 'Competitive Programming', category: 'Programming', level: 'Expert', description: 'Problem-solving speed and contest strategies.' },
+      { name: 'Data Structures & Algorithms', category: 'Programming', level: 'Expert', description: 'Trees, graphs, dynamic programming.' }
+    ],
+    skillsNeeded: [
+      { name: 'Spanish', category: 'Language', level: 'Beginner' }
+    ],
+    availability: { weekdays: true, weekends: true, mornings: false, afternoons: false, evenings: true }
+  },
+  {
+    email: 'rahul@demo.com',
+    name: 'Rahul Gupta',
+    college: 'Delhi University',
+    year: '1st Year',
+    bio: 'Acoustic guitar player of 5 years.',
+    skillsOffered: [
+      { name: 'Acoustic Guitar', category: 'Music', level: 'Advanced', description: 'Chords, strumming, fingerpicking.' }
+    ],
+    skillsNeeded: [
+      { name: 'HTML & CSS', category: 'Programming', level: 'Beginner' }
+    ],
+    availability: { weekdays: false, weekends: true, mornings: false, afternoons: true, evenings: true }
+  },
+  {
+    email: 'kavya@demo.com',
+    name: 'Kavya Nair',
+    college: 'VIT Vellore',
+    year: 'Postgraduate',
+    bio: 'MBA candidate specializing in digital marketing.',
+    skillsOffered: [
+      { name: 'Digital Marketing', category: 'Business', level: 'Expert', description: 'SEO, content strategy, paid ads.' }
+    ],
+    skillsNeeded: [
+      { name: 'HTML & CSS', category: 'Programming', level: 'Beginner' }
+    ],
+    availability: { weekdays: true, weekends: false, mornings: true, afternoons: true, evenings: false }
+  }
+];
+
 /**
- * Find or create peer demo students to interact with Navitha
+ * Ensure all 5 peer demo users exist in the database.
+ * Creates them with a hashed password if missing.
+ * Returns a map of { email -> user document }.
+ */
+async function ensureDemoPeers() {
+  const peerMap = {};
+
+  for (const profile of PEER_PROFILES) {
+    let peer = await User.findOne({ email: profile.email });
+    if (!peer) {
+      peer = await User.create({
+        ...profile,
+        password: 'password123', // pre-save hook hashes this
+        isDemo: true,
+        isActive: true,
+        reputationScore: 0,
+        totalReviews: 0,
+        completedSessions: 0,
+        profileComplete: 85
+      });
+    }
+    peerMap[profile.email] = peer;
+  }
+
+  return peerMap;
+}
+
+/**
+ * Find or create peer demo students to interact with Navitha.
+ * Always calls ensureDemoPeers() first so peers are guaranteed to exist.
  */
 async function getDemoPeers() {
-  // Try to find the standard demo students
-  const priya = await User.findOne({ email: 'priya@demo.com' });
-  const arjun = await User.findOne({ email: 'arjun@demo.com' });
-  const sneha = await User.findOne({ email: 'sneha@demo.com' });
-  const rahul = await User.findOne({ email: 'rahul@demo.com' });
-  const kavya = await User.findOne({ email: 'kavya@demo.com' });
-
-  // Fallback to any demo users if specific ones are missing
-  const allDemoPeers = await User.find({ isDemo: true, email: { $ne: DEMO_EMAIL } }).limit(5);
-
+  const peerMap = await ensureDemoPeers();
   return {
-    priya: priya || allDemoPeers[0],
-    arjun: arjun || allDemoPeers[1] || allDemoPeers[0],
-    sneha: sneha || allDemoPeers[2] || allDemoPeers[0],
-    rahul: rahul || allDemoPeers[3] || allDemoPeers[0],
-    kavya: kavya || allDemoPeers[4] || allDemoPeers[0]
+    priya: peerMap['priya@demo.com'],
+    arjun: peerMap['arjun@demo.com'],
+    sneha: peerMap['sneha@demo.com'],
+    rahul: peerMap['rahul@demo.com'],
+    kavya: peerMap['kavya@demo.com']
   };
 }
 
@@ -415,17 +514,23 @@ async function seedDemoUser() {
 
 /**
  * Retrieves the demo user, seeding if it does not yet exist or has no activity.
+ * Peers are guaranteed to exist before checking activity (ensureDemoPeers is
+ * called inside getDemoPeers which is called inside seedDemoUser).
  */
 async function getOrCreateDemoUser() {
   const demoUser = await User.findOne({ email: DEMO_EMAIL });
   if (!demoUser) {
     return await seedDemoUser();
   }
-  // Check if activity exists
+
+  // Re-seed if the demo user has no sessions OR no peers exist yet
   const hasSessions = await Session.exists({ participants: demoUser._id });
-  if (!hasSessions) {
+  const peerCount = await User.countDocuments({ isDemo: true, email: { $ne: DEMO_EMAIL } });
+
+  if (!hasSessions || peerCount < 5) {
     return await seedDemoUser();
   }
+
   return demoUser;
 }
 
