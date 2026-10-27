@@ -1,194 +1,250 @@
-# SkillSwap - Campus Skill Exchange Platform
+# SkillSwap — Peer-to-Peer Skill Exchange Platform
 
-A full-stack MERN application where college students can **exchange skills** with peers on campus — no money involved, just knowledge.
+**Learn together. Teach each other. Grow together.**
 
-## 🚀 Tech Stack
+🔗 **Live Website:** [SkillSwap](https://frontend-lovat-two-kb4dupu997.vercel.app/)
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 18 (Vite) |
-| Backend | Node.js + Express |
-| Database | MongoDB + Mongoose |
-| Auth | JWT (bcryptjs) |
-| Styling | Vanilla CSS (Custom Design System) |
-| Icons | Lucide React |
+💻 **GitHub Repository:** [View Source Code](https://github.com/navithachekuri4-dot/skillswap)
+
+🎥 **Project Demo Video:** [Watch the Demo](https://drive.google.com/file/d/1ps41qyTgO7p5A8ejX9scuEpFFldeN3G9/view?usp=sharing)
 
 ---
 
-## ⚙️ Setup Instructions
+## 📌 Problem Statement
+
+Students often want to learn new skills but face difficulties finding the right learning resources, affordable guidance, and people who can help them understand specific topics. At the same time, many students already possess valuable skills that they could teach to others.
+
+Traditional learning platforms often focus on one-way teaching and may require learners to pay for courses or tutors. They also provide limited opportunities for students to exchange knowledge directly with one another.
+
+This creates a gap between students who want to learn and students who are willing to teach.
+
+## 💡 Proposed Solution
+
+**SkillSwap** is a peer-to-peer skill exchange platform that connects students who want to learn with students who can teach.
+
+Users can offer skills they know, discover skills they want to learn, send learning proposals, schedule sessions, and exchange knowledge with other students.
+
+Instead of treating learning as a one-way process, SkillSwap encourages collaborative learning, where every student can be both a learner and a teacher.
+
+The platform provides a centralized place to discover skills, manage learning interactions, track sessions, and build credibility through reviews and ratings.
+
+## ✨ Key Features
+
+### 🔐 Authentication
+- User registration and login.
+- JWT-based authentication.
+- Protected routes for authenticated users.
+- Demo login for exploring the application.
+
+### 👤 User Profiles
+- View and update profile information.
+- Add skills to teach.
+- Add skills to learn.
+- Manage personal learning preferences and availability.
+
+### 🔎 Browse and Discover Skills
+- Explore skills offered by other students.
+- Discover potential learning partners.
+- Find people with complementary skills and learning interests.
+
+### 🤝 Skill Exchange Proposals
+- Send proposals to other students.
+- View sent and received proposals.
+- Accept or reject incoming proposals.
+- Manage proposal status.
+
+### 📅 Session Management
+- Schedule learning sessions.
+- View upcoming and completed sessions.
+- Track session status.
+- Manage cancellations and rescheduling where supported.
+
+### ⭐ Reviews and Reputation
+- Submit reviews for completed learning sessions.
+- View ratings and feedback.
+- Build a reputation based on learning interactions.
+
+### 📊 Dashboard
+- View an overview of learning activity.
+- Track proposals and sessions.
+- View reputation and review information.
+- Access important platform features from one place.
+
+### 🧪 Demo Experience
+- Use the demo login to explore the application.
+- Explore sample users, skill offers, proposals, and sessions when demo data is available.
+
+## 🛠️ Technology Stack
+
+**Frontend**
+- React
+- Vite
+- JavaScript
+- Axios
+- React Router
+- CSS
+
+**Backend**
+- Node.js
+- Express.js
+- REST APIs
+- JSON Web Tokens (JWT)
+- bcrypt / password hashing, where implemented
+
+**Database**
+- MongoDB Atlas
+- Mongoose
+
+**Deployment and Tools**
+- Vercel — frontend hosting
+- Render — backend hosting
+- Git and GitHub — version control
+
+## 🏗️ Application Architecture
+
+SkillSwap follows a client-server architecture.
+
+1. The React frontend provides the user interface.
+2. Axios sends HTTP requests to the Express backend.
+3. Express routes and controllers process requests and apply business logic.
+4. Mongoose communicates with MongoDB Atlas to store and retrieve application data.
+5. JWT authentication protects endpoints that require a logged-in user.
+6. The backend returns JSON responses to the frontend, which updates the interface.
+
+```text
+                 ┌──────────────────────┐
+                 │      User / Browser  │
+                 └──────────┬───────────┘
+                            │
+                 ┌──────────▼───────────┐
+                 │   React + Vite UI    │
+                 │   Hosted on Vercel   │
+                 └──────────┬───────────┘
+                            │ HTTP / REST API
+                 ┌──────────▼───────────┐
+                 │   Node.js + Express  │
+                 │    Hosted on Render  │
+                 └──────────┬───────────┘
+                            │ Mongoose
+                 ┌──────────▼───────────┐
+                 │    MongoDB Atlas     │
+                 └──────────────────────┘
+```
+
+## 🚀 Getting Started
+
+Follow these steps to run SkillSwap locally.
 
 ### Prerequisites
-- Node.js v18+
-- MongoDB (local or MongoDB Atlas)
 
-### 1. Backend Setup
+Install the following:
+- Node.js (version 18 or later)
+- npm
+- Git
+- A MongoDB Atlas database or local MongoDB instance
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/navithachekuri4-dot/skillswap.git
+cd skillswap
+```
+
+### 2. Configure the Backend
 
 ```bash
 cd backend
-# Create .env file (already created with defaults)
-# Edit MONGO_URI if using Atlas:
-# MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/skillswap
-
 npm install
-npm run dev        # Starts on http://localhost:5000
 ```
 
-### 2. Seed the Database (optional demo data)
+Create a `.env` file inside the `backend` directory using the environment variables required by your backend configuration.
+
+Example:
+
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_strong_random_secret
+JWT_EXPIRE=7d
+FRONTEND_URL=http://localhost:5173
+```
+
+Replace the example values with your own configuration. Never commit your real `.env` file, database password, or JWT secret to GitHub.
+
+Start the backend:
 
 ```bash
-cd backend
-node seed.js
+npm start
 ```
 
-This creates 5 demo users with skills. Login with any of:
-- `priya@demo.com` / `password123`
-- `arjun@demo.com` / `password123`
-- `sneha@demo.com` / `password123`
-- `rahul@demo.com` / `password123`
-- `kavya@demo.com` / `password123`
+If your `package.json` does not define a start script, use the start command specified by your project configuration.
 
-### 3. Frontend Setup
+### 3. Configure the Frontend
+
+Open a new terminal:
 
 ```bash
 cd frontend
 npm install
-npm run dev        # Starts on http://localhost:5173
 ```
 
-Open: **http://localhost:5173**
-
----
-
-## 🔑 Core Features
-
-### 1. Authentication & Profile
-- JWT-based signup/login with validation
-- Complete profile: name, college, year, bio, skills, availability
-- Profile completeness meter (up to 100%)
-
-### 2. Skill Offers & Requests
-- Post what you can teach (Skill Offers)
-- Post what you want to learn (Skill Requests)
-- Browse with category filters and search
-- Toggle offer visibility (active/hidden)
-
-### 3. Matching & Proposals
-- AI-driven matching based on your skills wanted/offered
-- Recommended matches on Dashboard
-- Send proposals with message, offered skill, wanted skill, preferred time
-- Accept with session scheduling / Reject with reason / Cancel
-
-### 4. Session Management
-- Schedule sessions upon acceptance (date, time, mode, meet link)
-- Both users mark session as complete
-- Reschedule with reason (notifies other party)
-- Cancel with reason
-
-### 5. Reputation System
-- 1-5 star ratings with written feedback
-- Tag-based commendations (Patient, Knowledgeable, etc.)
-- Reputation score computed from all reviews
-- Displayed on profile and match cards
-
----
-
-## 📁 Project Structure
-
-```
-Mern_Final_Project/
-├── backend/
-│   ├── middleware/
-│   │   ├── auth.js           # JWT protect middleware
-│   │   └── errorHandler.js   # Global error handler
-│   ├── models/
-│   │   ├── User.js
-│   │   ├── SkillOffer.js
-│   │   ├── SkillRequest.js
-│   │   ├── Proposal.js
-│   │   ├── Session.js
-│   │   └── Review.js
-│   ├── routes/
-│   │   ├── auth.js           # /api/auth
-│   │   ├── users.js          # /api/users
-│   │   ├── offers.js         # /api/offers
-│   │   ├── requests.js       # /api/requests
-│   │   ├── proposals.js      # /api/proposals
-│   │   ├── sessions.js       # /api/sessions
-│   │   ├── reviews.js        # /api/reviews
-│   │   └── dashboard.js      # /api/dashboard
-│   ├── .env
-│   ├── seed.js               # Demo data seeder
-│   └── server.js
-└── frontend/
-    └── src/
-        ├── components/
-        │   ├── Navbar.jsx
-        │   ├── Sidebar.jsx
-        │   ├── Avatar.jsx
-        │   ├── UserCard.jsx
-        │   ├── ProposalModal.jsx
-        │   └── ReviewModal.jsx
-        ├── context/
-        │   └── AuthContext.jsx
-        ├── pages/
-        │   ├── Dashboard.jsx
-        │   ├── Login.jsx
-        │   ├── Register.jsx
-        │   ├── Browse.jsx
-        │   ├── Proposals.jsx
-        │   ├── Sessions.jsx
-        │   ├── Profile.jsx
-        │   └── MySkills.jsx
-        ├── services/
-        │   └── api.js
-        └── index.css         # Full design system
-```
-
----
-
-## 🌐 API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register new user |
-| POST | `/api/auth/login` | Login |
-| GET | `/api/auth/me` | Get current user |
-| GET | `/api/dashboard` | Dashboard stats + matches |
-| GET | `/api/offers` | Browse skill offers |
-| POST | `/api/offers` | Create offer |
-| GET | `/api/requests` | Browse skill requests |
-| POST | `/api/requests` | Create request |
-| POST | `/api/proposals` | Send proposal |
-| GET | `/api/proposals/received` | Received proposals |
-| PUT | `/api/proposals/:id/accept` | Accept + schedule session |
-| PUT | `/api/proposals/:id/reject` | Reject proposal |
-| GET | `/api/sessions` | All user sessions |
-| PUT | `/api/sessions/:id/complete` | Mark complete |
-| PUT | `/api/sessions/:id/reschedule` | Reschedule |
-| POST | `/api/reviews` | Submit review |
-| GET | `/api/users/matches` | Get smart matches |
-| GET | `/api/users/search` | Search users |
-
----
-
-## 🎨 Design System
-
-- **Primary:** `#3B82F6` (Soft Blue)
-- **Font:** Inter (Google Fonts)
-- **Light theme** with white background
-- Soft shadows, rounded cards, hover micro-animations
-- Left sidebar + top navbar layout
-- Fully responsive (mobile overlay sidebar)
-- Beautiful loading skeletons, empty states, error states
-
----
-
-## 📝 Environment Variables
+Create a `.env` file in the `frontend` directory:
 
 ```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/skillswap
-JWT_SECRET=skillswap_super_secret_jwt_key_2024
-JWT_EXPIRE=7d
-NODE_ENV=development
+VITE_API_URL=http://localhost:5000
 ```
+
+The frontend API service appends `/api` to this base URL, so do not add `/api` to the value.
+
+Start the frontend:
+
+```bash
+npm run dev
+```
+
+Open the local URL displayed by Vite, usually `http://localhost:5173`.
+
+> **Note:** The exact environment variables, seed scripts, and npm commands should match the configuration in your repository.
+
+## 🌐 Live Deployment
+
+The application is deployed using:
+
+- **Frontend:** [Vercel Deployment](https://frontend-lovat-two-kb4dupu997.vercel.app/)
+- **Backend:** Render
+- **Database:** MongoDB Atlas
+
+The frontend communicates with the deployed backend through REST API endpoints. Environment variables are configured separately for deployment.
+
+## 🎥 Project Demonstration
+
+Watch the recorded demonstration to see SkillSwap's main workflows, including authentication, skill discovery, proposals, sessions, and the dashboard.
+
+**Demo Video:** [Watch SkillSwap](PASTE_YOUR_VIDEO_LINK_HERE)
+
+## 🔮 Future Enhancements
+
+- Real-time chat between learning partners.
+- Automated matching based on complementary skills.
+- Calendar integration and session reminders.
+- Video conferencing integration.
+- Advanced search and filtering.
+- Notifications for proposals and upcoming sessions.
+- Improved analytics for learning progress.
+- More detailed reputation and feedback analytics.
+
+## 🎯 Project Objective
+
+The objective of SkillSwap is to make peer learning more accessible by allowing students to exchange knowledge, collaborate with one another, and build practical skills through structured learning interactions.
+
+The platform demonstrates the development of a full-stack web application with authentication, database integration, REST APIs, and cloud deployment.
+
+## 👩‍💻 Author
+
+**Navitha Chekuri**
+
+GitHub: [navithachekuri4-dot](https://github.com/navithachekuri4-dot)
+
+---
+
+*SkillSwap — Share your skills. Discover new ones. Learn together.*
